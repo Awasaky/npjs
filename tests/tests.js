@@ -24,7 +24,7 @@ describe("np.type", function() {
 	it("Checking function doSomething, expected string 'function'", function() {
 		function doSomething(){
 			return 10;
-		}
+		};
 		assert.equal(np.type( doSomething ), 'function');
 	});
 
@@ -85,6 +85,29 @@ describe("np.type", function() {
 
 	it("Checking boolean = 1 > 0, expected string 'boolean'", function() {
 		assert.equal(np.type( 1 > 0 ), 'boolean');
+	});
+
+	it("Checking key = Symbol(\"description\"), expected string 'symbol'", function() {
+		var key = Symbol("description");
+		assert.equal(np.type( key ), 'symbol');
+	});
+
+	it("Checking Number.isFinite(\"0\"), expected string 'boolean'", function() {
+		assert.equal(np.type( Number.isFinite("0") ), 'boolean');
+	});
+
+	it("Checking str = new String('String'), expected string 'string'", function() {
+		var str = new String('String');
+		assert.equal(np.type( str ), 'string');
+	});
+	
+	it("Checking num = new Number(100), expected string 'number'", function() {
+		var num = new Number(100);
+		assert.equal(np.type( num ), 'number');
+	});
+
+	it("Checking new Date(), expected string 'date'", function() {
+		assert.equal(np.type( new Date() ), 'date');
 	});
 
 });
