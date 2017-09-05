@@ -14,32 +14,35 @@ exports.type = function( exp2Type ) {
 	var obj2Str = detectName( exp2Type ).toLowerCase();
 
 	// first block detect types that can't do many problems
-	if ( obj2Str === 'null' || // tested
-		obj2Str === 'string' || // tested
-		obj2Str === 'array' || // tested
-		obj2Str === 'function' || // tested
-		obj2Str === 'object' || // tested
-		obj2Str === 'undefined' || // tested
-		obj2Str === 'regexp' || //
-		obj2Str === 'symbol' || // tested
-		obj2Str === 'date' ) { // tested
+	if ( obj2Str === 'null' || // null is empty object
+		obj2Str === 'string' || // string is text in '' or ""
+		obj2Str === 'array' || // any data collected with [] and have a lenght
+		obj2Str === 'function' || // any function, that can be used
+		obj2Str === 'object' || // any associative data collection
+		obj2Str === 'undefined' || // undefined is empty simple type
+		obj2Str === 'regexp' || // regexp is string to usage in search 
+		obj2Str === 'symbol' || // special type to extend old objects with new functionality
+		obj2Str === 'date' ) { // special type, what return any date
 		return obj2Str;
+
 	} else if ( obj2Str === 'number' ) { // behavior of numbers is more complex, so better check it more
-		Number.isNaN = Number.isNaN || function( exp2Type ) {
+		Number.isNaN = Number.isNaN || function( exp2Type ) { // special function to test number to NaN existence
   			return typeof exp2Type === 'number' && isNaN( exp2Type );
 		};
+
 		if ( Number.isNaN( exp2Type ) ) {
-			return 'NaN'; // tested
+			return 'NaN'; // NaN mean Not a Number - but this type of data have another behavior than numbers
 		} else if ( exp2Type === Infinity || exp2Type === -Infinity ) {
-			return 'Infinity'; // tested
+			return 'Infinity'; // Infinity is type of data means more tha any number, but also have unique behavior
 		};
-		return obj2Str;
+		return obj2Str; // if check to NaN and Infinity Passed - return Number, that means any another number - float or integer
+
 	} else if ( exp2Type === true || exp2Type === false ) {
-		return 'boolean'; // tested
+		return 'boolean'; // testing expression with both boolean meanings
 	};
 
 	// undetected object type so return his name
-	return typeof( exp2Type );
+	return typeof( exp2Type ); // if all checks passed, but type is still undetected, return standart JS typeof result
 
 };
 
@@ -52,11 +55,11 @@ exports.typeNum = function ( exp2Type ) {
 	var whoIsIt = np.type( exp2Type );
 	if ( whoIsIt === 'number' ) {
 		if ( exp2Type === Math.floor( exp2Type ) ) {
-			return 'integer';
+			return 'integer'; // if nummber after Math.floor be same, return string 'integer'
 		};
-		return 'float';
+		return 'float'; // any other number return string 'float'.
 	};
-	return 'NaN';
+	return 'NaN'; // if checking data can't be detected as float or integer, returned string is 'NaN' (means Not a Number)
 
 };
 
@@ -72,27 +75,44 @@ exports.comp  = function( exp2Comp1, exp2Comp2 ) {
 	if ( exp2Type1 === exp2Type2 ) {
 		
 		if ( exp2Type1 === 'NaN' || // Obviously if both === NaN this need to be return true;
-		 	exp2Type1 === 'undefined' ||
-		 	exp2Type1 === 'null') { 
+		 	exp2Type1 === 'undefined' || // same as undefined
+		 	exp2Type1 === 'null') {  // same as null
 			return true;
 		};
 		
 		if ( exp2Type1 === 'array' ) {
-			return np.compArr( exp2Comp1, exp2Comp2 );
+			return np.compArr( exp2Comp1, exp2Comp2 ); // try to compare arrays, even if they not linked
 		};
 
-		if ( exp2Comp1 === exp2Comp2 ) {
-			return true; // Infinity, strings, function, object, regexp, symbol, date
+		if ( exp2Type1 === 'regexp' ) { // comparing regexp as strings
+			return exp2Comp1.toString() === exp2Comp2.toString();
+		};
+
+		if ( exp2Comp1 === exp2Comp2 ) { // comparing by link, that means both objects have same origin
+			return true; // function, object, symbol, date; also work with Infinity, string,
 		};
 
 		return false;
 	};
 
-	return false;
+	return false; // if behavior of both operands not same - always return false
 
 };
 
-exports.compArr  = function( arr2Comp1, arr2Comp2 ) {
+///////////////////////////////////////////////////////////////////////////////
+// np.compArr is function that makes obiuos compare 2 Arrays,
+// return false if any of both is not Arrays
+// return true if both arrays is empty
+// return true if all elements of arrays are strictly similar
+// return false if not
+///////////////////////////////////////////////////////////////////////////////
+exports.compArr = function( arr2Comp1, arr2Comp2 ) {
+
+	if (np.type( arr2Comp1 ) !== 'array' || np.type( arr2Comp2 ) !== 'array' ) {
+
+		return false;
+
+	};
 
 	if ( arr2Comp1.length === 0 && arr2Comp2.length === 0 ) {
 	
@@ -100,7 +120,7 @@ exports.compArr  = function( arr2Comp1, arr2Comp2 ) {
 	
 	};
 
-	if ( arr2Comp1.length === arr2Comp2.length ) {
+	if ( np.comp( arr2Comp1.length, arr2Comp2.length ) ) {
 		
 		for (var i = 0; i < arr2Comp1.length; i++) {
 
@@ -118,45 +138,70 @@ exports.compArr  = function( arr2Comp1, arr2Comp2 ) {
 
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// np.conc - Concate all string arguments to single string
+///////////////////////////////////////////////////////////////////////////////
 exports.conc = function() {
 
 	var result = '';
 
 	for ( var i = 0; i < arguments.length; i++ ) {
-		if ( np.type( arguments[i] ) === 'number' ) {
-			result = result + np.num2str( arguments[i] );
-		};
 		if ( np.type( arguments[i] ) === 'string' ) {
 			result = result + arguments[i];
 		};
+	};
+
+	return result; // anyway it returns string, but if all arguments is not strings, it returns empty string.
+
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// np.str2num - Convert string to obvious string like "12" to 12
+// else - return 0
+///////////////////////////////////////////////////////////////////////////////
+exports.str2Num = function( str ) {
+
+	var result = 0;
+
+	if ( np.type(str) !== 'string' ) {
+		return 0;
+	};
+
+	result = +str;
+
+	if ( np.type( result ) !== 'number' ) {
+		return 0;
 	};
 
 	return result;
 
 };
 
-exports.num2str = function ( number2Conv ) {
+///////////////////////////////////////////////////////////////////////////////
+// np.num2Str - Convert number to obvious string like 12 to '12'
+// else - return ''
+///////////////////////////////////////////////////////////////////////////////
+exports.num2Str = function ( number2Conv ) {
 	
 	if ( np.type( number2Conv ) === 'number' ) {
 	
 		return '' + number2Conv;
 	
-	} else {
-	
-		return '';
 	};
+
+	return '';
 
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-// Make copy of array
+// np.copyArr - return copy of array
 ///////////////////////////////////////////////////////////////////////////////
 exports.copyArr = function ( arr2Copy ) {
 
 	var arrResult = [];
 
 	var checkIsNotArray = ( np.type( arr2Copy ) !== 'array' );
-	var checkIsEmpty = ( arr2Copy.length === arrResult.length ) ;
+	var checkIsEmpty = ( arr2Copy.length === arrResult.length );
 
 	if ( checkIsArray || checkIsEmpty ) {
 		return arrResult;
@@ -185,6 +230,30 @@ exports.copyArr = function ( arr2Copy ) {
 exports.summArr = function ( arr2Summ1, arr2Summ2 ) {
 	
 	var arrResult = [];
+
+	var checkNotArray1 = ( np.type( arr2Summ1 ) !== 'array' ),
+		checkNotArray2 = ( np.type( arr2Summ2 ) !== 'array' ),
+		checkEmpty1 = ( arr2Summ1.length === arrResult.length ),
+		checkEmpty2 = ( arr2Summ2.length === arrResult.length );
+	var failCheck =  checkNotArray1 && checkNotArray2 ||
+		checkEmpty1 && checkEmpty2 ||
+		checkNotArray1 && checkEmpty2 ||
+		checkNotArray2 && checkEmpty1;
+
+	if ( failCheck ) {
+		return arrResult;
+	};
+
+	if ( checkNotArray1 && !checkEmpty2 ) {
+		return np.copyArr( arr2Summ2 );
+	};
+
+	if ( checkNotArray2 && !checkEmpty1 ) {
+		return np.copyArr( arr2Summ1 );
+	};
+
+	console.log('end function');
+	return arrResult;
 
 };
 

@@ -80,6 +80,11 @@ describe("np.type array", function() {
 		assert.equal(np.type( [1,3,'2'] ), 'array');
 	});
 
+	it("Checking 2nd element of array [1,3,['2']]", function() {
+		var a = [1,3,['2']];
+		assert.equal(np.type(a[2]), 'array');
+	});
+
 });
 
 describe("np.type object", function() {
@@ -220,6 +225,18 @@ describe("np.comp", function() {
 		assert.equal( np.comp( undefined , null ), false );
 	});
 
+	it("Checking two regexp both === /JAVA(SCRIPT)/i", function() {
+		var oneRegexp = /JAVA(SCRIPT)/i,
+			secRegexp = /JAVA(SCRIPT)/i;
+		assert.isTrue( np.comp( oneRegexp, secRegexp ) );
+	});
+
+	it("Checking two vars, both === Infinity", function() {
+		var oneInf = Infinity,
+			secInf = Infinity;
+		assert.isTrue( np.comp( oneInf, secInf ) );
+	});
+
 });
 
 describe("np.compArr", function() {
@@ -252,7 +269,7 @@ describe("np.compArr", function() {
 
 describe("np.conc", function() {
 
-	it("Checking empty call, expected ''", function() {
+	it("Checking empty call, expected \'\'", function() {
 		assert.equal( np.conc(), '' );
 	});
 
@@ -264,8 +281,36 @@ describe("np.conc", function() {
 		assert.equal( np.conc( 'true' , 'false' ), 'truefalse' );
 	});
 
+	it("Checking 'true' and 333444, expected 'true'", function() {
+		assert.equal( np.conc( 'true' , 333444 ), 'true' );
+	});
+
 	it("Checking 'true' and 333444, expected 'true333444'", function() {
-		assert.equal( np.conc( 'true' , 333444 ), 'true333444' );
+		assert.equal( np.conc( 'true' , np.num2str( 333444 ) ), 'true333444' );
+	});
+
+});
+
+describe("np.str2num", function() {
+
+	it("Checking empty call, expected 0", function() {
+		assert.equal( np.str2num(), 0 );
+	});
+
+	it("Checking '1200', expected 1200", function() {
+		assert.equal( np.str2num( '1200' ), 1200 );
+	});
+
+	it("Checking '-1200', expected -1200", function() {
+		assert.equal( np.str2num( '-1200' ), -1200 );
+	});
+
+	it("Checking 'One thousand two hundred', expected 1200", function() {
+		assert.equal( np.str2num( 'One thousand two hundred' ), 1200 );
+	});
+
+	it("Checking 'Одна тысяча двести', expected 1200", function() {
+		assert.equal( np.str2num( 'Одна тысяча двести' ), 1200 );
 	});
 
 });
@@ -302,6 +347,26 @@ describe("np.copyArr", function() {
 
 	it("Copy [1,2,[3,4],45], expected [1,2,[3,4],45]", function() {
 		assert.isTrue( np.compArr( np.copyArr( [1,2,[3,4],45] ), [1,2,[3,4],45] ) );
+	});
+
+});
+
+describe("np.summArr", function() {
+
+	it("Copy arr try to use at 10 and 20, expected []", function() {
+		assert.isTrue( np.comp( np.summArr( 10, 20 ), [] ) );
+	});
+
+	it("Copy arr try to use at [] and [], expected []", function() {
+		assert.isTrue( np.comp( np.summArr( [], [] ), [] ) );
+	});
+
+	it("Copy arr try to use at 10 and [2], expected [2]", function() {
+		assert.isTrue( np.comp( np.summArr( 10, [2] ), [2] ) );
+	});
+
+	it("Copy arr try to use at [2] and 4, expected [2]", function() {
+		assert.isTrue( np.comp( np.summArr( [2], 4 ), [2] ) );
 	});
 
 });
