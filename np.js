@@ -1,5 +1,5 @@
-"use strict"
-;(function(exports) {
+"use strict";
+(function(exports) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // np.type is a function, that return a string with lowercase type of expression gived to it.
@@ -53,12 +53,14 @@ exports.type = function( exp2Type ) {
 exports.typeNum = function ( exp2Type ) {
 	
 	var whoIsIt = np.type( exp2Type );
+
 	if ( whoIsIt === 'number' ) {
 		if ( exp2Type === Math.floor( exp2Type ) ) {
 			return 'integer'; // if nummber after Math.floor be same, return string 'integer'
 		};
 		return 'float'; // any other number return string 'float'.
 	};
+
 	return 'NaN'; // if checking data can't be detected as float or integer, returned string is 'NaN' (means Not a Number)
 
 };
@@ -139,6 +141,48 @@ exports.compArr = function( arr2Comp1, arr2Comp2 ) {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+// unfinished
+///////////////////////////////////////////////////////////////////////////////
+exports.toBool = function( exp2Bool ) {
+
+	var checkType = np.type( exp2Bool );
+	var falseType = ( checkType === 'null' || checkType === 'NaN' || checkType === 'undefined' );
+	// trueCheck does'nt need
+	// var trueType = ( checkType === 'Infinity' || checkType === 'date' || checkType === 'symbol' || checkType === 'function' );
+
+	if ( checkType === 'boolean' ) {
+		return exp2Bool;
+	};
+
+	if ( falseType ) {
+		return false;
+	};
+
+	if ( checkType === 'number' && exp2Bool === 0 ) {
+		return false;
+	};
+
+	if ( checkType === 'string' )
+		if ( exp2Bool === 'false' || exp2Bool === '' ) {
+		return false;
+	};
+
+	return true;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// unfinished
+///////////////////////////////////////////////////////////////////////////////
+exports.toNum = function() {
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// unfinished
+///////////////////////////////////////////////////////////////////////////////
+exports.toStr = function() {
+};
+
+///////////////////////////////////////////////////////////////////////////////
 // np.conc - Concate all string arguments to single string
 ///////////////////////////////////////////////////////////////////////////////
 exports.conc = function() {
@@ -158,6 +202,7 @@ exports.conc = function() {
 ///////////////////////////////////////////////////////////////////////////////
 // np.str2num - Convert string to obvious string like "12" to 12
 // else - return 0
+// Need removeWhiteSpaces addition
 ///////////////////////////////////////////////////////////////////////////////
 exports.str2Num = function( str ) {
 
@@ -184,9 +229,7 @@ exports.str2Num = function( str ) {
 exports.num2Str = function ( number2Conv ) {
 	
 	if ( np.type( number2Conv ) === 'number' ) {
-	
 		return '' + number2Conv;
-	
 	};
 
 	return '';

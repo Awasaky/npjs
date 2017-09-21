@@ -1,180 +1,184 @@
-describe("np.type null", function() {
+describe("np.type", function() {
 
-	it("Checking exactly null", function() {
-		assert.equal(np.type( null ), 'null');
+	describe("np.type null", function() {
+
+		it("Checking exactly null", function() {
+			assert.equal(np.type( null ), 'null');
+		});
+
+		it("Checking variable someThing = null", function() {
+			var someThing = null;
+			assert.equal(np.type( someThing ), 'null');
+		});
+
 	});
 
-	it("Checking variable someThing = null", function() {
-		var someThing = null;
-		assert.equal(np.type( someThing ), 'null');
+	describe("np.type number and relatives", function() {
+
+		it("Checking -Infinity, expected Infinity", function() {
+			assert.equal(np.type( -Infinity ), 'Infinity');
+		});
+
+		it("Checking '1/0', expected Infinity", function() {
+			assert.equal(np.type( 1/0 ), 'Infinity');
+		});
+
+		it("Checking number = 120, expected number", function() {
+			assert.equal(np.type( 120 ), 'number');
+		});
+
+		it("Checking number = 120 - -'121', expected number", function() {
+			assert.equal(np.type( 120 - -'121' ), 'number');
+		});
+
+		it("Checking number = 120 / 3, expected number", function() {
+			assert.equal(np.type( 120 / 3 ), 'number');
+		});
+
+		it("Checking num = new Number(100), expected number", function() {
+			var num = new Number(100);
+			assert.equal(np.type( num ), 'number');
+		});
+
+		it("Checking num = NaN, expected NaN", function() {
+			var num = NaN;
+			assert.equal(np.type( num ), 'NaN');
+		});
+
 	});
 
-});
+	describe("np.type string", function() {
 
-describe("np.type number and relatives", function() {
+		it("Checking string 'undefined'", function() {
+			assert.equal(np.type( 'undefined' ), 'string');
+		});
 
-	it("Checking -Infinity, expected Infinity", function() {
-		assert.equal(np.type( -Infinity ), 'Infinity');
+		it("Checking string '[111]'", function() {
+			assert.equal(np.type( '[111]' ), 'string');
+		});
+
+		it("Checking str = new String('String')", function() {
+			var str = new String('String');
+			assert.equal(np.type( str ), 'string');
+		});
+
 	});
 
-	it("Checking '1/0', expected Infinity", function() {
-		assert.equal(np.type( 1/0 ), 'Infinity');
+	describe("np.type date", function() {
+
+		it("Checking new Date()", function() {
+			assert.equal(np.type( new Date() ), 'date');
+		});
+
 	});
 
-	it("Checking number = 120, expected number", function() {
-		assert.equal(np.type( 120 ), 'number');
+	describe("np.type array", function() {
+
+		it("Checking empty array []", function() {
+			assert.equal(np.type( [] ), 'array');
+		});
+
+		it("Checking array [1,3,'2']", function() {
+			assert.equal(np.type( [1,3,'2'] ), 'array');
+		});
+
+		it("Checking 3rd element of array [1,3,['2']]", function() {
+			var a = [1,3,['2']];
+			assert.equal(np.type(a[2]), 'array');
+		});
+
 	});
 
-	it("Checking number = 120 - -'121', expected number", function() {
-		assert.equal(np.type( 120 - -'121' ), 'number');
+	describe("np.type object", function() {
+
+
+		it("Checking new Object()", function() {
+			assert.equal(np.type( new Object() ), 'object');
+		});
+
+		it("Checking object window", function() {
+			assert.equal(np.type( window ), 'object');
+		});
+
+		it("Checking empty object {}", function() {
+			assert.equal(np.type( {} ), 'object');
+		});
+
+		it("Checking object Math", function() {
+			assert.equal(np.type( Math ), 'object');
+		});
+
 	});
 
-	it("Checking number = 120 / 3, expected number", function() {
-		assert.equal(np.type( 120 / 3 ), 'number');
+	describe("np.type symbol", function() {
+
+		it("Checking key = Symbol(\"description\")", function() {
+			var key = Symbol("description");
+			assert.equal(np.type( key ), 'symbol');
+		});
+
 	});
 
-	it("Checking num = new Number(100), expected number", function() {
-		var num = new Number(100);
-		assert.equal(np.type( num ), 'number');
+	describe("np.type function", function() {
+
+		it("Checking empty function() {}", function() {
+			assert.equal(np.type( function(){} ), 'function');
+		});
+
+		it("Checking function doSomething", function() {
+			function doSomething(){
+				return 10;
+			};
+			assert.equal(np.type( doSomething ), 'function');
+		});
+
 	});
 
-	it("Checking num = NaN, expected NaN", function() {
-		var num = NaN;
-		assert.equal(np.type( num ), 'NaN');
+	describe("np.type boolean", function() {
+
+		it("Checking boolean = true", function() {
+			assert.equal(np.type( true ), 'boolean');
+		});
+
+		it("Checking boolean = 1 > 0", function() {
+			assert.equal(np.type( 1 > 0 ), 'boolean');
+		});
+
+		it("Checking Number.isFinite(\"0\")", function() {
+			assert.equal(np.type( Number.isFinite("0") ), 'boolean');
+		});
+
 	});
 
-});
+	describe("np.type regexp", function() {
 
-describe("np.type string", function() {
+		it("Checking /ЛЮ/", function() {
+			assert.equal(np.type(/ЛЮ/), 'regexp');
+		});
 
-	it("Checking string 'undefined'", function() {
-		assert.equal(np.type( 'undefined' ), 'string');
+		it("Checking /JAVA(SCRIPT)/i", function() {
+			assert.equal(np.type(/JAVA(SCRIPT)/i), 'regexp');
+		});
+
 	});
 
-	it("Checking string '[111]'", function() {
-		assert.equal(np.type( '[111]' ), 'string');
-	});
+	describe("np.type undefined", function() {
 
-	it("Checking str = new String('String')", function() {
-		var str = new String('String');
-		assert.equal(np.type( str ), 'string');
-	});
+		it("Checking empty call", function() {
+			assert.equal(np.type(), 'undefined');
+		});
 
-});
+		it("Checking undefined variable zzTop", function() {
+			var zzTop;
+			assert.equal(np.type( zzTop ), 'undefined');
+		});
 
-describe("np.type date", function() {
+		it("Checking variable direStraits cleared with undefined", function() {
+			var direStraits = 1;
+			direStraits = undefined;
+			assert.equal(np.type( direStraits ), 'undefined');
+		});
 
-	it("Checking new Date()", function() {
-		assert.equal(np.type( new Date() ), 'date');
-	});
-
-});
-
-describe("np.type array", function() {
-
-	it("Checking empty array []", function() {
-		assert.equal(np.type( [] ), 'array');
-	});
-
-	it("Checking array [1,3,'2']", function() {
-		assert.equal(np.type( [1,3,'2'] ), 'array');
-	});
-
-	it("Checking 2nd element of array [1,3,['2']]", function() {
-		var a = [1,3,['2']];
-		assert.equal(np.type(a[2]), 'array');
-	});
-
-});
-
-describe("np.type object", function() {
-
-
-	it("Checking new Object()", function() {
-		assert.equal(np.type( new Object() ), 'object');
-	});
-
-	it("Checking object window", function() {
-		assert.equal(np.type( window ), 'object');
-	});
-
-	it("Checking empty object {}", function() {
-		assert.equal(np.type( {} ), 'object');
-	});
-
-	it("Checking object Math", function() {
-		assert.equal(np.type( Math ), 'object');
-	});
-
-});
-
-describe("np.type symbol", function() {
-
-	it("Checking key = Symbol(\"description\")", function() {
-		var key = Symbol("description");
-		assert.equal(np.type( key ), 'symbol');
-	});
-
-});
-
-describe("np.type function", function() {
-
-	it("Checking empty function() {}", function() {
-		assert.equal(np.type( function(){} ), 'function');
-	});
-
-	it("Checking function doSomething", function() {
-		function doSomething(){
-			return 10;
-		};
-		assert.equal(np.type( doSomething ), 'function');
-	});
-
-});
-
-describe("np.type boolean", function() {
-
-	it("Checking boolean = true", function() {
-		assert.equal(np.type( true ), 'boolean');
-	});
-
-	it("Checking boolean = 1 > 0", function() {
-		assert.equal(np.type( 1 > 0 ), 'boolean');
-	});
-
-	it("Checking Number.isFinite(\"0\")", function() {
-		assert.equal(np.type( Number.isFinite("0") ), 'boolean');
-	});
-
-});
-
-describe("np.type regexp", function() {
-
-	it("Checking /ЛЮ/", function() {
-		assert.equal(np.type(/ЛЮ/), 'regexp');
-	});
-
-	it("Checking /JAVA(SCRIPT)/i", function() {
-		assert.equal(np.type(/JAVA(SCRIPT)/i), 'regexp');
-	});
-
-});
-
-describe("np.type undefined", function() {
-
-	it("Checking empty call", function() {
-		assert.equal(np.type(), 'undefined');
-	});
-
-	it("Checking undefined variable zzTop", function() {
-		var zzTop;
-		assert.equal(np.type( zzTop ), 'undefined');
-	});
-
-	it("Checking variable direStraits cleared with undefined", function() {
-		var direStraits = 1;
-		direStraits = undefined;
-		assert.equal(np.type( direStraits ), 'undefined');
 	});
 
 });
@@ -231,10 +235,25 @@ describe("np.comp", function() {
 		assert.isTrue( np.comp( oneRegexp, secRegexp ) );
 	});
 
+	it("Checking two vars with same regexp === /JAVA(SCRIPT)/i", function() {
+		var baseRegexp = /JAVA(SCRIPT)/i 
+			oneRegexp = baseRegexp,
+			secRegexp = baseRegexp;
+		assert.isTrue( np.comp( oneRegexp, secRegexp ) );
+	});
+
 	it("Checking two vars, both === Infinity", function() {
 		var oneInf = Infinity,
 			secInf = Infinity;
 		assert.isTrue( np.comp( oneInf, secInf ) );
+	});
+
+	it("Checking [] and ![], expected false", function() {
+		assert.equal( np.comp( [] , ![] ), false );
+	});
+
+	it("Checking 0 and -0, expected true", function() {
+		assert.equal( np.comp( 0 , -0 ), true );
 	});
 
 });
